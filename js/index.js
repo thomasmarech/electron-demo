@@ -1,4 +1,8 @@
 const database = require('./js/database');
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+const child_process = require('child_process');
 
 window.onload = function() {
 
@@ -22,6 +26,20 @@ window.onload = function() {
     // Repopulate the table
     populateTable();
   });
+
+  // Directory list
+  populateDirectories();
+
+  var list = document.getElementsByClassName('dir');
+  for(i=0; i<list.length; i++) {
+    list[i].addEventListener('click', (e) => {
+      var dir = e.target.innerHTML;
+      var command = 'start "" "' + dir + '"';
+      console.log(command);
+
+      child_process.exec(command);
+    });
+  }
 }
 
 // Populates the persons table
@@ -53,4 +71,23 @@ function deletePerson(id) {
 
   // Repopulate the table
   populateTable();
+}
+
+function populateDirectories() {
+  var dirs = getDirectories(os.homedir());
+  var ulBody = '';
+  for(i = 0; i < dirs.length; i++) {
+    ulBody += '<li class="dir">' + dirs[i] + '</li>';
+  }
+  document.getElementById('uldirs').innerHTML = ulBody;
+}
+
+function getDirectories(srcpath) {
+  var dirs = []; 
+  fs.readdirSync(srcpath).map((value, index) => {
+      var fullPath = path.join(srcpath, value);
+      if(fs.statSync(fullPath).isDirectory())
+        dirs.push(fullPath);
+    });
+  return dirs;
 }
