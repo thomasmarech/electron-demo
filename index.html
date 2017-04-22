@@ -38,19 +38,40 @@
       </tbody>
     </table>
 
-    <h3>Directories:</h3>
-    <ul id="uldirs"></ul>
-  </div>
+    <div class="row">
+      <div class="six columns">
+        <h3>Local home dir:</h3>
+        <ul id="uldirs"></ul>
+      </div>
+      <div class="six columns">
+        <h3>Webdav (confluence):</h3>
+        <div class="row">
+          <div class="five columns">
+            <label for="firstname">User</label>
+            <input class="u-full-width" placeholder="Username" id="wdUsername" type="text">
+          </div>
+          <div class="five columns">
+            <label for="lastname">Password</label>
+            <input class="u-full-width" placeholder="Password" id="wdPwd" type="password">
+          </div>
+          <div class="two columns">
+            <label for="add" class="invisible">x</label>
+            <input class="button-primary" value="Load" id="wdLoad" type="button">
+          </div>
+        </div>
+        <ul id="webdavdirs"></ul>
+      </div>    
+    </div>
 
   <script type="text/javascript">
     var remote = require('electron').remote;
     document.addEventListener('keydown', function (e) {
-      if (e.which === 123) {
-        remote.getCurrentWindow().webContents.openDevTools();
-      } else if (e.which === 116) {
-        location.reload();
-      }
-    });
-</script>
+        if (e.which === 123) {
+          remote.getCurrentWindow().webContents.openDevTools();
+        } else if (e.which === 116) {
+          location.reload();
+        }
+      });
+  </script>
 </body>
 </html>

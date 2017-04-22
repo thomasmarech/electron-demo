@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const child_process = require('child_process');
+var webdav = require("webdav");
 
 window.onload = function() {
 
@@ -40,6 +41,15 @@ window.onload = function() {
       child_process.exec(command);
     });
   }
+
+  // Web dav
+  document.getElementById('wdLoad').addEventListener('click', () => {
+    // Retrieve the input fields
+    var username = document.getElementById('wdUsername');
+    var password = document.getElementById('wdPwd');
+
+    getWebDavContents(username.value, password.value);  
+  });
 }
 
 // Populates the persons table
@@ -90,4 +100,25 @@ function getDirectories(srcpath) {
         dirs.push(fullPath);
     });
   return dirs;
+}
+
+function getWebDavContents(user, password, baseDir = '/') {
+  var client = webdav('https://support.rocdasys.com/confluence/plugins/servlet/confluence/default/Global/MEET/MeetSquare',
+    user,
+    password);
+  client
+    .getDirectoryContents(baseDir)
+    .then(function(contents) {
+        console.log(JSON.stringify(contents, undefined, 4));
+
+        var ulBody = '';
+        for(i = 0; i < contents.length; i++) {
+          var item = contents[i];
+          ulBody += '<li>' + item.filename + '</li>';
+        }
+        document.getElementById('webdavdirs').innerHTML = ulBody;
+    })
+    .catch(function(err) {
+        console.error(err);
+    });
 }
